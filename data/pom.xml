@@ -53,6 +53,11 @@
 			<version>6.0.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.ajbrown</groupId>
+			<artifactId>name-machine</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>

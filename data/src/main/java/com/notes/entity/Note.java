@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "notes", catalog = "notes_schema")
+@Table(name = "notes")
 public class Note implements Serializable {
 
 	@Id
@@ -15,7 +15,20 @@ public class Note implements Serializable {
 	private String text;
 
 	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
+
+	public Note() {
+	}
+
+	public Note(String text) {
+		this.text = text;
+	}
+
+	public Note(String text, User user) {
+		this.text = text;
+		this.user = user;
+	}
 
 	public int getId() {
 		return id;

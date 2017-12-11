@@ -1,13 +1,14 @@
 package com.notes.entity;
 
 import com.sun.istack.internal.NotNull;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "users", catalog = "notes_schema")
+@Table(name = "users")
 public class User implements Serializable {
 
 	@Id
@@ -23,7 +24,7 @@ public class User implements Serializable {
 	@Column
 	private String email;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
 	private List<Note> notes;
 
 	public User() {
@@ -33,6 +34,13 @@ public class User implements Serializable {
 		this.username = username;
 		this.password = password;
 		this.email = email;
+	}
+
+	public User(String username, String password, String email, List<Note> notes) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.notes = notes;
 	}
 
 	public int getId() {
@@ -65,6 +73,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
 	}
 
 	@Override

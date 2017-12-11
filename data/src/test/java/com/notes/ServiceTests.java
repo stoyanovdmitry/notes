@@ -1,10 +1,14 @@
 package com.notes;
 
 import com.notes.config.DataConfiguration;
+import com.notes.entity.Note;
 import com.notes.entity.User;
 import com.notes.service.AbstractService;
 import com.notes.service.ServiceInterface;
+import org.ajbrown.namemachine.Name;
+import org.ajbrown.namemachine.NameGenerator;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,11 +27,28 @@ public class ServiceTests {
 	@Autowired
 	private ServiceInterface<User> userService;
 
+	private static NameGenerator generator;
+
+	@BeforeClass
+	public static void preTesting() {
+		generator = new NameGenerator();
+	}
+
 	@Ignore
 	@Test
 	public void userAddTest() {
 
-		User user = new User("Cabron", "sombrero", "sss@las.com");
+		Name name = generator.generateName();
+		String stringName = name.toString();
+		String email = stringName.replaceAll("\\s+", "").toLowerCase() + "@gmail.com";
+
+		User user = new User(stringName, "pass", email);
+
+		List<Note> notes = new ArrayList<>();
+		notes.add(new Note("firstNote of " + stringName, user));
+		notes.add(new Note("secondNote of " + stringName, user));
+
+		user.setNotes(notes);
 		userService.save(user);
 	}
 
@@ -61,5 +83,12 @@ public class ServiceTests {
 		} catch (NoResultException e) {
 			Assert.assertTrue(true);
 		}
+	}
+
+	@Ignore
+	@Test
+	public void testNameGenerator() {
+		List<Name> names = new NameGenerator().generateNames(100);
+		names.forEach(System.out::println);
 	}
 }
