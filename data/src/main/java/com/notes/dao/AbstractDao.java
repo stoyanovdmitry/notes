@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-@Repository
 public abstract class AbstractDao<T extends Serializable> implements Dao<T> {
 
 	private Class<T> classType;

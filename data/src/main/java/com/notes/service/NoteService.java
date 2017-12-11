@@ -1,15 +1,15 @@
 package com.notes.service;
 
 import com.notes.dao.Dao;
-import com.notes.entity.User;
+import com.notes.entity.Note;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserService extends AbstractService<User> {
+public class NoteService extends AbstractService<Note> {
 
 	@Autowired
-	public UserService(Dao<User> userDao) {
-		super(userDao);
+	public NoteService(Dao<Note> noteDao) {
+		super(noteDao);
 	}
 }

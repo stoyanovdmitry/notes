@@ -2,7 +2,9 @@ package com.notes.dao;
 
 import com.notes.entity.Note;
 import org.hibernate.QueryException;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class NoteDao extends AbstractDao<Note> {
 
 	public NoteDao() {
@@ -11,6 +13,6 @@ public class NoteDao extends AbstractDao<Note> {
 
 	@Override
 	public Note findByName(String name) {
-		throw new QueryException("note haven't name");
+		throw new QueryException("Note has no name");
 	}
 }

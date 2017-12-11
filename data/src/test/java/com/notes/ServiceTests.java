@@ -2,7 +2,8 @@ package com.notes;
 
 import com.notes.config.DataConfiguration;
 import com.notes.entity.User;
-import com.notes.service.UserService;
+import com.notes.service.AbstractService;
+import com.notes.service.ServiceInterface;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ServiceTests {
 
 	@Autowired
-	private UserService userService;
+	private ServiceInterface<User> userService;
 
 	@Ignore
 	@Test
