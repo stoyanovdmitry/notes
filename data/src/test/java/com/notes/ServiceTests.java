@@ -1,5 +1,6 @@
 package com.notes;
 
+import com.notes.config.DataConfiguration;
 import com.notes.entity.User;
 import com.notes.service.UserService;
 import org.junit.Assert;
@@ -14,7 +15,7 @@ import javax.persistence.NoResultException;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"/service-context.xml", "/data-context.xml"})
+@ContextConfiguration(classes = DataConfiguration.class)
 public class ServiceTests {
 
 	@Autowired
