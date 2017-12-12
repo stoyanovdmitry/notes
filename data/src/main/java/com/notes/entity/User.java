@@ -1,7 +1,6 @@
 package com.notes.entity;
 
-import com.sun.istack.internal.NotNull;
-import org.hibernate.annotations.Cascade;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,6 +23,7 @@ public class User implements Serializable {
 	@Column
 	private String email;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
 	private List<Note> notes;
 

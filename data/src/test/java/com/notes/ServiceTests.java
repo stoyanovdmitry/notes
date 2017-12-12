@@ -91,4 +91,12 @@ public class ServiceTests {
 		List<Name> names = new NameGenerator().generateNames(100);
 		names.forEach(System.out::println);
 	}
+
+	@Ignore
+	@Test
+	public void addSomeUsers() {
+		for (int i = 0; i < 10; i++) {
+			userAddTest();
+		}
+	}
 }
