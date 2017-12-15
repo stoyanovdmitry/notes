@@ -1,18 +1,10 @@
 package com.notes.dao;
 
 import com.notes.entity.Note;
-import org.hibernate.QueryException;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class NoteDao extends AbstractDao<Note> {
+import java.util.List;
 
-	public NoteDao() {
-		super.setClassType(Note.class);
-	}
+public interface NoteDao extends Dao<Note> {
 
-	@Override
-	public Note findByName(String name) {
-		throw new QueryException("Note has no name");
-	}
+	List<Note> getAllByUsername(String username);
 }
