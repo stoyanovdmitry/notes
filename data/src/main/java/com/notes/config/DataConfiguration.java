@@ -47,6 +47,7 @@ public class DataConfiguration {
 	public Properties hibernateProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", dialect);
+		properties.put("hibernate.hbm2ddl.auto", "update");
 
 		return properties;
 	}

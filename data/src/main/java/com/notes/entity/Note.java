@@ -1,12 +1,10 @@
 package com.notes.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "notes")
 public class Note implements Serializable {
 
 	@Id

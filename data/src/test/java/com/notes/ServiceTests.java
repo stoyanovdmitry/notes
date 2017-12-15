@@ -3,8 +3,7 @@ package com.notes;
 import com.notes.config.DataConfiguration;
 import com.notes.entity.Note;
 import com.notes.entity.User;
-import com.notes.service.AbstractService;
-import com.notes.service.ServiceInterface;
+import com.notes.service.UserService;
 import org.ajbrown.namemachine.Name;
 import org.ajbrown.namemachine.NameGenerator;
 import org.junit.Assert;
@@ -25,7 +24,7 @@ import java.util.List;
 public class ServiceTests {
 
 	@Autowired
-	private ServiceInterface<User> userService;
+	private UserService userService;
 
 	private static NameGenerator generator;
 
@@ -38,25 +37,29 @@ public class ServiceTests {
 	@Test
 	public void userAddTest() {
 
-		Name name = generator.generateName();
-		String stringName = name.toString();
-		String email = stringName.replaceAll("\\s+", "").toLowerCase() + "@gmail.com";
-
-		User user = new User(stringName, "pass", email);
+		User user = getRandomUser();
 
 		List<Note> notes = new ArrayList<>();
-		notes.add(new Note("firstNote of " + stringName, user));
-		notes.add(new Note("secondNote of " + stringName, user));
+		notes.add(new Note("firstNote of " + user.getUsername(), user));
+		notes.add(new Note("secondNote of " + user.getUsername(), user));
 
 		user.setNotes(notes);
 		userService.save(user);
 	}
 
+	private User getRandomUser() {
+		Name name = generator.generateName();
+		String stringName = name.toString();
+		String email = stringName.replaceAll("\\s+", "").toLowerCase() + "@gmail.com";
+
+		return new User(stringName, "pass", email);
+	}
+
 	@Test
 	public void findUsers() {
 
-		User user1 = userService.getById(2);
-		User user2 = userService.getByName("Cabron");
+		User user1 = userService.get(2);
+		User user2 = userService.getByUsername(user1.getUsername());
 
 		List<User> users = userService.getAll();
 
@@ -67,18 +70,19 @@ public class ServiceTests {
 	@Test
 	public void updateDeleteTest() {
 
-		User user = new User("tester", "test", "post@m.c");
-		userService.save(user);
+		User user1 = getRandomUser();
+		userService.save(user1);
 
-		user.setPassword("cr");
-		userService.update(user);
-		User user1 = userService.getByName("tester");
-		Assert.assertEquals(user, user1);
+		user1.setPassword("new");
+		userService.update(user1);
 
-		userService.delete(user);
+		User user2 = userService.getByUsername(user1.getUsername());
+		Assert.assertEquals(user1, user2);
+
+		userService.delete(user2);
 
 		try {
-			user = userService.getByName("tester");
+			userService.getByUsername(user2.getUsername());
 			Assert.assertTrue(false);
 		} catch (NoResultException e) {
 			Assert.assertTrue(true);

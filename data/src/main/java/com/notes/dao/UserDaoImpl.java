@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public User getByUsername(String username) {
 		return sessionFactory.getCurrentSession()
-				.createQuery("from User where username =: name", User.class)
+				.createQuery("from User where username = :name", User.class)
 				.setParameter("name", username)
 				.getSingleResult();
 	}

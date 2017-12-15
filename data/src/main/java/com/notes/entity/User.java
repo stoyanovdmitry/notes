@@ -7,20 +7,19 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
 public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column
+	@Column(unique = true)
 	private String username;
 
 	@Column
 	private String password;
 
-	@Column
+	@Column(unique = true)
 	private String email;
 
 	@JsonIgnore
