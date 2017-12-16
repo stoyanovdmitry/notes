@@ -50,9 +50,10 @@ public class ServiceTests {
 	private User getRandomUser() {
 		Name name = generator.generateName();
 		String stringName = name.toString();
-		String email = stringName.replaceAll("\\s+", "").toLowerCase() + "@gmail.com";
+		String username = stringName.replaceAll("\\s+", "").toLowerCase();
+		String email = username + "@email.com";
 
-		return new User(stringName, "pass", email);
+		return new User(username, "pass", email);
 	}
 
 	@Test
@@ -87,13 +88,6 @@ public class ServiceTests {
 		} catch (NoResultException e) {
 			Assert.assertTrue(true);
 		}
-	}
-
-	@Ignore
-	@Test
-	public void testNameGenerator() {
-		List<Name> names = new NameGenerator().generateNames(100);
-		names.forEach(System.out::println);
 	}
 
 	@Ignore
