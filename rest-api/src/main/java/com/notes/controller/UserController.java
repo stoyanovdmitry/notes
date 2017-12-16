@@ -19,13 +19,13 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public boolean addUser(@RequestBody User user) {
-		return userService.save(user);
+	public void addUser(@RequestBody User user) {
+		userService.save(user);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public User getUserById(@PathVariable int id) {
-		return userService.getById(id);
+		return userService.get(id);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -34,15 +34,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public boolean deleteUser(@PathVariable int id) {
-		User user = userService.getById(id);
-		return userService.delete(user);
+	public void deleteUser(@PathVariable int id) {
+		User user = userService.get(id);
+		userService.delete(user);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public boolean updateUser(@PathVariable int id,
-	                          @RequestBody User user) {
+	public void updateUser(@PathVariable int id,
+	                       @RequestBody User user) {
 		user.setId(id);
-		return userService.update(user);
+		userService.update(user);
 	}
 }
