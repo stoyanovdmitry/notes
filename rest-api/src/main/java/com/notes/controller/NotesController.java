@@ -2,6 +2,7 @@ package com.notes.controller;
 
 import com.notes.entity.Note;
 import com.notes.entity.User;
+import com.notes.exception.UserNotFoundException;
 import com.notes.service.NoteService;
 import com.notes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class NotesController {
 	}
 
 	@RequestMapping(name = "/{id}", method = RequestMethod.DELETE)
-	public void deleteNode(@PathVariable int id) {
+	public void deleteNote(@PathVariable int id) {
 		Note note = noteService.get(id);
 		noteService.delete(note);
 	}
@@ -51,6 +52,6 @@ public class NotesController {
 	private void validateUser(String username) {
 
 		User user = userService.getByUsername(username);
-		if (user == null) throw new RuntimeException("user not found");
+		if (user == null) throw new UserNotFoundException(username);
 	}
 }

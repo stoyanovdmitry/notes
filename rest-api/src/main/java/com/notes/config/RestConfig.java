@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 		"com.notes.controller",
 		"com.notes.service"
 })
-public class RestConfig extends WebMvcConfigurerAdapter{
+public class RestConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
