@@ -11,8 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 @ComponentScan({
 		"com.notes.controller",
-		"com.notes.service"
+		"com.notes.service",
 })
+@Import(SecurityConfig.class)
 public class RestConfig extends WebMvcConfigurerAdapter {
 
 	@Override

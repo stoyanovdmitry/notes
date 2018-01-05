@@ -1,12 +1,16 @@
 package com.notes.controller;
 
 import com.notes.entity.User;
+import com.notes.exception.NoAccessException;
 import com.notes.exception.UserNotFoundException;
 import com.notes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NoResultException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,30 +30,38 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-	public User getUser(@PathVariable String userId) {
-		return findUser(userId);
+	public User getUser(@PathVariable String userId,
+						@AuthenticationPrincipal Principal principal) {
+		return findUser(userId, principal);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<User> getAllUsers() {
 		return userService.getAll();
 	}
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-	public void deleteUser(@PathVariable String userId) {
-		User user = findUser(userId);
+	public void deleteUser(@PathVariable String userId,
+						   @AuthenticationPrincipal Principal principal) {
+		User user = findUser(userId, principal);
 		userService.delete(user);
 	}
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
 	public void updateUser(@PathVariable String userId,
-	                       @RequestBody User user) {
-		User existUser = findUser(userId);
+						   @RequestBody User user,
+						   @AuthenticationPrincipal Principal principal) {
+		User existUser = findUser(userId, principal);
 		user.setId(existUser.getId());
 		userService.update(user);
 	}
 
 	private User findUser(String userId) {
+		return findUser(userId, null);
+	}
+
+	private User findUser(String userId, Principal principal) {
 
 		User user = null;
 
@@ -64,8 +76,11 @@ public class UserController {
 		}
 
 		if (user == null) {
-			throw new UserNotFoundException(userId);
+			throw new UserNotFoundException();
 		}
+
+		if (principal != null && !principal.getName().equals(user.getUsername()))
+			throw new NoAccessException();
 
 		return user;
 	}

@@ -52,6 +52,6 @@ public class NotesController {
 	private void validateUser(String username) {
 
 		User user = userService.getByUsername(username);
-		if (user == null) throw new UserNotFoundException(username);
+		if (user == null) throw new UserNotFoundException();
 	}
 }

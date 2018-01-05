@@ -15,7 +15,7 @@ import javax.persistence.NoResultException;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			User user = userService.getByUsername(username);
 			return new UserDetailsImpl(user);
 		} catch (NoResultException ignored) {
-			throw new UserNotFoundException(username);
+			throw new UserNotFoundException();
 		}
 	}
 }
