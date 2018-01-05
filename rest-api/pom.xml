@@ -9,6 +9,9 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>war</packaging>
+	<properties>
+		<spring-security.version>4.2.3.RELEASE</spring-security.version>
+	</properties>
 
 	<artifactId>rest-api</artifactId>
 
@@ -29,6 +32,20 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
+
+		<!--spring-security-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
 
 		<!--servlet-->
 		<dependency>
@@ -59,6 +76,12 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>6.0.6</version>
 		</dependency>
 
 	</dependencies>
