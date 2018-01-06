@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/rest/users", "/rest/users/").permitAll()
+			.antMatchers("/rest/users/{username}/**").access("principal.username == #username")
 			.antMatchers("/rest/**").authenticated()
 			.and()
 //			.httpBasic().authenticationEntryPoint(authenticationEntryPoint)

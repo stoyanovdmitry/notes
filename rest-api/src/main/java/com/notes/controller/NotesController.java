@@ -2,12 +2,13 @@ package com.notes.controller;
 
 import com.notes.entity.Note;
 import com.notes.entity.User;
-import com.notes.exception.UserNotFoundException;
 import com.notes.service.NoteService;
 import com.notes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,9 @@ public class NotesController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public void addNote(@PathVariable String username,
-	                    @RequestBody Note note) {
+	public void addNote(@RequestBody Note note,
+						@PathVariable String username) {
+
 		User user = userService.getByUsername(username);
 		note.setUser(user);
 		noteService.save(note);
@@ -33,25 +35,20 @@ public class NotesController {
 
 	@RequestMapping(name = "/{id}", method = RequestMethod.DELETE)
 	public void deleteNote(@PathVariable int id) {
+
 		Note note = noteService.get(id);
 		noteService.delete(note);
 	}
 
 	@RequestMapping(name = "/{id}", method = RequestMethod.PUT)
 	public void updateNote(@RequestBody Note note) {
+
 		noteService.update(note);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Note> getAllByUsername(@PathVariable String username) {
 
-		validateUser(username);
 		return noteService.getAllByUsername(username);
-	}
-
-	private void validateUser(String username) {
-
-		User user = userService.getByUsername(username);
-		if (user == null) throw new UserNotFoundException();
 	}
 }

@@ -19,8 +19,13 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-		grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+		if(user.getUsername().equals("admin"))
+			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
 		return grantedAuthorities;
 	}
 
