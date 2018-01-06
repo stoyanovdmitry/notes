@@ -2,13 +2,12 @@ package com.notes.controller;
 
 import com.notes.entity.Note;
 import com.notes.entity.User;
+import com.notes.exception.NoAccessException;
 import com.notes.service.NoteService;
 import com.notes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -33,15 +32,23 @@ public class NotesController {
 		noteService.save(note);
 	}
 
-	@RequestMapping(name = "/{id}", method = RequestMethod.DELETE)
-	public void deleteNote(@PathVariable int id) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public void deleteNote(@PathVariable int id,
+						   @PathVariable String username) {
 
-		Note note = noteService.get(id);
+		Note note = validateAndGetNote(id, username);
 		noteService.delete(note);
 	}
 
-	@RequestMapping(name = "/{id}", method = RequestMethod.PUT)
-	public void updateNote(@RequestBody Note note) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public void updateNote(@RequestBody Note note,
+						   @PathVariable int id,
+						   @PathVariable String username) {
+
+		Note existNote = validateAndGetNote(id, username);
+
+		note.setId(id);
+		note.setUser(existNote.getUser());
 
 		noteService.update(note);
 	}
@@ -50,5 +57,16 @@ public class NotesController {
 	public List<Note> getAllByUsername(@PathVariable String username) {
 
 		return noteService.getAllByUsername(username);
+	}
+
+	private Note validateAndGetNote(int id, String username) {
+
+		Note note = noteService.get(id);
+		String usernameFromNote = note.getUser().getUsername();
+
+		if(!usernameFromNote.equals(username))
+			throw new NoAccessException();
+
+		return note;
 	}
 }

@@ -6,7 +6,6 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -27,7 +26,7 @@ public class WebApp implements WebApplicationInitializer {
 
 //		FilterRegistration.Dynamic springSecurityFilterChain =
 //				servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy());
-//		springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+//		springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/rest/*");
 //		springSecurityFilterChain.setAsyncSupported(true);
 
 		ServletRegistration.Dynamic dispatcher = servletContext
