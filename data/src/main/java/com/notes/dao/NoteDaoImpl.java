@@ -23,7 +23,7 @@ public class NoteDaoImpl implements NoteDao {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public List<Note> getAllByUsername(String username) {
 		return sessionFactory.getCurrentSession()
-				.createQuery("from Note where User.username =: name", Note.class)
+				.createQuery("from Note where user.username = :name", Note.class)
 				.setParameter("name", username)
 				.getResultList();
 	}

@@ -3,6 +3,7 @@ package com.notes;
 import com.notes.config.DataConfiguration;
 import com.notes.entity.Note;
 import com.notes.entity.User;
+import com.notes.service.NoteService;
 import com.notes.service.UserService;
 import org.ajbrown.namemachine.Name;
 import org.ajbrown.namemachine.NameGenerator;
@@ -25,6 +26,8 @@ public class ServiceTests {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private NoteService noteService;
 
 	private static NameGenerator generator;
 
@@ -96,5 +99,21 @@ public class ServiceTests {
 		for (int i = 0; i < 10; i++) {
 			userAddTest();
 		}
+	}
+
+	@Test
+	public void getNotesByUsername() {
+
+		List<Note> notes = noteService.getAllByUsername("username1");
+
+		notes.forEach(note -> System.out.println(note.getText()));
+	}
+
+	@Test
+	public void getNotes() {
+
+		List<Note> notes = noteService.getAll();
+
+		notes.forEach(note -> System.out.println(note.getText()));
 	}
 }
