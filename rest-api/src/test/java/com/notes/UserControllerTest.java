@@ -77,19 +77,6 @@ public class UserControllerTest {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
-	@Test
-	public void getUserById() throws Exception {
-		mockMvc.perform(get("/users/" + id).accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.username").value(username));
-	}
-
-	@Test
-	public void getUserById404() throws Exception {
-		mockMvc.perform(get("/users/69").accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isNotFound());
-	}
 
 	@Test
 	public void getUserByUsername() throws Exception {

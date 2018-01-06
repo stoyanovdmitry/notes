@@ -1,11 +1,13 @@
 package com.notes.controller;
 
 import com.notes.entity.User;
+import com.notes.exception.UserNotFoundException;
 import com.notes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @RestController
@@ -26,7 +28,11 @@ public class UserController {
 
 	@RequestMapping(value = "/{username}", method = RequestMethod.GET)
 	public User getUser(@PathVariable String username) {
-		return userService.getByUsername(username);
+		try {
+			return userService.getByUsername(username);
+		} catch (NoResultException ignored) {
+			throw new UserNotFoundException();
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
