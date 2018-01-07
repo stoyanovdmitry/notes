@@ -1,18 +1,15 @@
 package com.notes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notes.config.DataConfiguration;
 import com.notes.config.RestConfig;
+import com.notes.config.TestConfig;
 import com.notes.config.WebApp;
-import com.notes.entity.Note;
 import com.notes.entity.User;
 import com.notes.service.UserService;
-import org.ajbrown.namemachine.Name;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,10 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.SQLException;
-
-import java.util.Arrays;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,112 +29,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {
 		RestConfig.class,
 		WebApp.class,
+		TestConfig.class,
 		DataConfiguration.class
 })
 @WebAppConfiguration
 public class UserControllerTest {
 
-	private MockMvc mockMvc;
+	private MockMvc mvc;
+
+	@Autowired
+	private UserService userServiceMock;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private UserService userService;
-
-	private int id;
-	private final String username = "username1";
-
-	private User testUser;
-
 	@Before
 	public void setUp() {
 
-		User user;
+//		Mockito.reset(userServiceMock);
 
-		try {
-			user = userService.getByUsername(username);
-			id = user.getId();
-		} catch (Exception ignore) {
-
-			user = new User(username, "pass", "mail@mail.me");
-			Note note1 = new Note("text1", user);
-			Note note2 = new Note("text2", user);
-			user.setNotes(Arrays.asList(note1, note2));
-
-			userService.save(user);
-
-			user = userService.getByUsername(username);
-			id = user.getId();
-		}
-
-		testUser = new User("test", "pass", "test@email.com");
-
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
-
-
-	@Test
-	public void getUserByUsername() throws Exception {
-		mockMvc.perform(get("/users/" + username).accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.id").value(id));
+		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+							 .build();
 	}
 
 	@Test
-	public void getUserByUsername404() throws Exception {
-		mockMvc.perform(get("/users/username").accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isNotFound());
-	}
+	public void getUserIsOk() throws Exception {
 
-	@Test
-	public void addUser() throws Exception {
+		User user = new User("user1", "pass", "email");
+		user.setId(1);
 
-		String jsonUser = objectToJson(testUser);
+		when(userServiceMock.getByUsername("user1")).thenReturn(user);
 
-		mockMvc.perform(post("/users")
-				                .content(jsonUser)
-				                .contentType(MediaType.APPLICATION_JSON_UTF8)
-				                .accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk());
-	}
+		mvc.perform(get("/users/user1").accept(MediaType.APPLICATION_JSON_UTF8))
+		   .andExpect(jsonPath("$.id").value(1))
+		   .andExpect(jsonPath("$.username").value("user1"))
+		   .andExpect(status().isOk());
 
-	@Test
-	public void updateUser() throws Exception {
-
-		String name = testUser.getUsername();
-
-		User user = userService.getByUsername(name);
-		user.setEmail("updated@mail.com");
-
-		String jsonUser = objectToJson(user);
-		testUser = user;
-
-		mockMvc.perform(put("/users/" + name)
-				                .content(jsonUser)
-				                .contentType(MediaType.APPLICATION_JSON_UTF8)
-				                .accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void deleteUser() throws Exception {
-
-		String name = testUser.getUsername();
-
-		mockMvc.perform(delete("/users/" + name)
-				                .contentType(MediaType.APPLICATION_JSON_UTF8)
-				                .accept(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isOk());
-	}
-
-	public String objectToJson(Object object) {
-		try {
-			return new ObjectMapper().writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return null;
-		}
+		verify(userServiceMock, times(1)).getByUsername("user1");
 	}
 }
