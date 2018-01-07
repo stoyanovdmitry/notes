@@ -13,17 +13,17 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String username;
 
-	@Column
+	@Column(nullable = false)
 	private String password;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String email;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Note> notes;
 
 	public User() {
