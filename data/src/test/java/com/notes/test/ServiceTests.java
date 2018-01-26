@@ -1,7 +1,6 @@
 package com.notes.test;
 
 import com.notes.config.DataConfiguration;
-import com.notes.config.TestDataConfiguration;
 import com.notes.entity.Note;
 import com.notes.entity.User;
 import com.notes.service.NoteService;
@@ -18,10 +17,7 @@ import javax.persistence.PersistenceException;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-		DataConfiguration.class,
-		TestDataConfiguration.class,
-})
+@ContextConfiguration(classes = DataConfiguration.class)
 public class ServiceTests {
 
 	@Autowired
