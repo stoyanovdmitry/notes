@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -18,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
 
 </head>
-<body>
+<body class="bg-light">
 <nav id="app" class="navbar navbar-dark bg-warning">
     <div class="container">
         <a class="navbar-brand text-dark" href="#" v-if="user !== null">
@@ -32,95 +33,15 @@
     </div>
 </nav>
 
-<div id="app2" class="container border border-top-0 border-bottom-0 pt-4 pb-1">
-    <div class="container">
+<div id="app2" class="container bg-white border border-top-0 border-bottom-0 pt-4 pb-1">
         <div class="row">
             <div v-for="note in notes" class="col-sm-4">
-                <span>{{ note.text }}</span>
+                <div class="note mb-5 p-4">{{ note.text }}</div>
             </div>
         </div>
-    </div>
 </div>
 
-<script>
+<script src="js/frontentd-core.js"></script>
 
-    var restUrl = 'http://localhost:8080/rest/rest';
-
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-    headers.append('Authorization', 'Basic ' + btoa('user:pass'));
-
-    var userOnLoad = new Vue({
-        el: '#app',
-        data: {
-            recipes: [],
-            url: restUrl + '/users',
-            user: null
-        },
-        mounted: function () {
-
-            var app = this;
-
-
-            fetch(restUrl + '/users/user', {
-                method: 'GET',
-                headers: headers
-            })
-                .then(function (response) {
-                    if (response.status === 200)
-                        return response.json()
-                            .then(function (user) {
-                                app.user = user;
-
-                                fetch(restUrl + '/users/user/notes', {
-                                    method: 'GET',
-                                    headers: headers
-                                })
-                                    .then(function (response) {
-                                        if (response.status === 200)
-                                            return response.json()
-                                                // .then(notes => app.notes = notes);
-                                                .then(notesVue.getNotes);
-                                        else
-                                            alert(response.status);
-                                    })
-                            });
-                    else
-                        alert(response.status + '\n' + response.message)
-                })
-                .catch(function (reason) {
-                    alert(reason)
-                });
-        },
-    });
-
-
-    var notesVue = new Vue({
-        el: '#app2',
-        data: {
-            notes: []
-        },
-        methods: {
-            getNotes: function () {
-
-                var app = this;
-
-                fetch(restUrl + '/users/user/notes', {
-                    method: 'GET',
-                    headers: headers
-                })
-                    .then(function (response) {
-                        if (response.status === 200)
-                            return response.json()
-                                .then(notes => app.notes = notes);
-                        else
-                            alert(response.status);
-                    });
-            }
-        },
-    });
-
-</script>
 </body>
 </html>
