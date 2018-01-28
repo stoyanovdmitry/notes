@@ -1,10 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Home Page</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+
 </head>
 <body>
-html
+<nav id="app" class="navbar navbar-dark bg-warning">
+    <div class="container">
+        <a class="navbar-brand text-dark" href="#" v-if="user !== null">
+            {{ user.username }}'s notes
+        </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a href="#" class="btn btn-outline-light" role="button">Sign Out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div id="app2" class="container border border-top-0 border-bottom-0 pt-4 pb-1">
+    <div class="container">
+        <div class="row">
+            <div v-for="note in notes" class="col-sm-4">
+                <span>{{ note.text }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var restUrl = 'http://localhost:8080/rest/rest';
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    headers.append('Authorization', 'Basic ' + btoa('user:pass'));
+
+    var userOnLoad = new Vue({
+        el: '#app',
+        data: {
+            recipes: [],
+            url: restUrl + '/users',
+            user: null
+        },
+        mounted: function () {
+
+            var app = this;
+
+
+            fetch(restUrl + '/users/user', {
+                method: 'GET',
+                headers: headers
+            })
+                .then(function (response) {
+                    if (response.status === 200)
+                        return response.json()
+                            .then(function (user) {
+                                app.user = user;
+
+                                fetch(restUrl + '/users/user/notes', {
+                                    method: 'GET',
+                                    headers: headers
+                                })
+                                    .then(function (response) {
+                                        if (response.status === 200)
+                                            return response.json()
+                                                // .then(notes => app.notes = notes);
+                                                .then(notesVue.getNotes);
+                                        else
+                                            alert(response.status);
+                                    })
+                            });
+                    else
+                        alert(response.status + '\n' + response.message)
+                })
+                .catch(function (reason) {
+                    alert(reason)
+                });
+        },
+    });
+
+
+    var notesVue = new Vue({
+        el: '#app2',
+        data: {
+            notes: []
+        },
+        methods: {
+            getNotes: function () {
+
+                var app = this;
+
+                fetch(restUrl + '/users/user/notes', {
+                    method: 'GET',
+                    headers: headers
+                })
+                    .then(function (response) {
+                        if (response.status === 200)
+                            return response.json()
+                                .then(notes => app.notes = notes);
+                        else
+                            alert(response.status);
+                    });
+            }
+        },
+    });
+
+</script>
 </body>
 </html>
