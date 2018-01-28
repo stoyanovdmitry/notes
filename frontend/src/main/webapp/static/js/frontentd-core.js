@@ -83,8 +83,7 @@ var notesVue = new Vue({
             })
                 .then(response => {
                     if(response.status === 200) {
-                        alert(response.status);
-                        var index = app.notes.indexOf(note);
+                        const index = app.notes.indexOf(note);
                         app.notes.splice(index, 1);
                     } else
                         alert(response.status);
