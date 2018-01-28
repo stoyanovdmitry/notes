@@ -54,7 +54,9 @@ const userOnLoad = new Vue({
 const notesVue = new Vue({
     el: '#app2',
     data: {
-        notes: []
+        notes: [],
+        noteText: '',
+        editableNote: null,
     },
     methods: {
         loadNotes: function () {
@@ -105,27 +107,28 @@ const notesVue = new Vue({
                         app.loadNotes(); //would be great to optimize this part of code, maybe
                     } else alert(response.status);
                 });
+        },
+        setEditableNote: function (note) {
+            this.editableNote = note;
+        },
+        updateNote: function () {
+
+            const app = this;
+            const note = app.editableNote;
+            const bodyData = JSON.stringify(note);
+
+            fetch(REST_URL + '/users/' + username + '/notes/' + app.editableNote.id, {
+                method: 'PUT',
+                headers: headers,
+                body: bodyData
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        app.loadNotes(); //would be great to optimize this part of code, maybe !!!!!!! jst replace arr.el
+                    } else alert(response.status);
+                });
+
+            app.editableNote = null;
         }
     },
 });
-
-// const saveNoteVue = new Vue({
-//     el: '#app3',
-//     methods: {
-//         saveNote: function (noteText) {
-//
-//
-//             fetch(REST_URL + '/users/' + username + '/notes', {
-//                 method: 'POST',
-//                 headers: headers,
-//                 body: {
-//                     'text': 'sa'
-//                 }
-//             })
-//                 .then(response => {
-//                     if (response.status !== 200)
-//                         alert(response.status);
-//                 });
-//         }
-//     }
-// });

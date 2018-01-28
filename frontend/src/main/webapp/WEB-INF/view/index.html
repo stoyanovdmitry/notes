@@ -42,20 +42,41 @@
                 <button type="button" class="btn btn-outline-danger float-right border-0 rounded-circle"
                         v-on:click="deleteNote(note)">D
                 </button>
+                <button type="button" class="btn btn-outline-success float-right border-0 rounded-circle mr-2"
+                        v-on:click="setEditableNote(note)"
+                        data-toggle="modal" data-target="#editNoteModal">E
+                </button>
             </div>
         </div>
     </div>
     <button type="button" class="btn btn-addnote btn-lg btn-primary border-0 rounded-circle" data-toggle="modal"
-            data-target="#addNoteModal">
-        A
+            data-target="#addNoteModal">A
     </button>
     <div class="modal fade" id="addNoteModal">
         <div class="modal-dialog modal-dialog-centered modal-dialog-addnote">
             <div class="modal-content">
                 <div class="modal-body">
                     <form action="">
-                        <textarea v-model="noteText" placeholder="Note something..." class="form-control note-textarea"></textarea>
-                        <button v-on:click="saveNote(noteText)" type="submit" class="btn btn-primary float-right position-relative" style="top: 2em">Save</button>
+                        <textarea v-model="noteText" placeholder="Note something..."
+                                  class="form-control note-textarea"></textarea>
+                        <button v-on:click="saveNote(noteText)" type="button"
+                                class="btn btn-primary float-right position-relative" style="top: 2em">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editNoteModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-addnote">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form v-if="editableNote" action="">
+                        <textarea v-if="editableNote" v-model="editableNote.text"
+                                  class="form-control note-textarea"></textarea>
+                        <button v-on:click="updateNote()" type="button"
+                                class="btn btn-primary float-right position-relative" style="top: 2em">Save
+                        </button>
                     </form>
                 </div>
             </div>
