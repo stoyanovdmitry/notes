@@ -14,8 +14,8 @@ public class FrontendConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/WEB-INF/view/**")
-				.addResourceLocations("/WEB-INF/view/");
+		registry.addResourceHandler("/static/**", "/WEB-INF/view/**")
+				.addResourceLocations("/static/", "/WEB-INF/view/");
 	}
 
 //	@Bean

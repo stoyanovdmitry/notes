@@ -7,7 +7,7 @@ var password = 'pass';
 var headers = new Headers();
 headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
-headers.append('Authorization', 'Basic ' + btoa('user:pass'));
+headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
 
 var userOnLoad = new Vue({
     el: '#app',
@@ -16,8 +16,7 @@ var userOnLoad = new Vue({
     },
     mounted: function () {
 
-        var app = this;
-
+        const app = this;
 
         fetch(REST_URL + '/users/' + username, {
             method: 'GET',
@@ -60,7 +59,7 @@ var notesVue = new Vue({
     methods: {
         getNotes: function () {
 
-            var app = this;
+            const app = this;
 
             fetch(REST_URL + '/users/' + username + '/notes', {
                 method: 'GET',
@@ -74,9 +73,22 @@ var notesVue = new Vue({
                         alert(response.status);
                 });
         },
-        deleteNote: function (id) {
+        deleteNote: function (note) {
 
-            // fetch(REST_URL + '/users')
+            const app = this;
+
+            fetch(REST_URL + '/users/' + username + '/notes/' + note.id, {
+                method: 'DELETE',
+                headers: headers
+            })
+                .then(response => {
+                    if(response.status === 200) {
+                        alert(response.status);
+                        var index = app.notes.indexOf(note);
+                        app.notes.splice(index, 1);
+                    } else
+                        alert(response.status);
+                });
         }
     },
 });

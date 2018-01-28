@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -37,11 +37,12 @@
         <div class="row">
             <div v-for="note in notes" class="col-sm-4">
                 <div class="note mb-5 p-4">{{ note.text }}</div>
+                <button type="button" class="btn btn-outline-danger" v-on:click="deleteNote(note)">Delete</button>
             </div>
         </div>
 </div>
 
-<script src="js/frontentd-core.js"></script>
+<script src="../../static/js/frontentd-core.js"></script>
 
 </body>
 </html>
