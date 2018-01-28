@@ -4,12 +4,12 @@ var username = 'user';
 var password = 'pass';
 
 
-var headers = new Headers();
+const headers = new Headers();
 headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
 headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
 
-var userOnLoad = new Vue({
+const userOnLoad = new Vue({
     el: '#app',
     data: {
         user: null
@@ -36,7 +36,7 @@ var userOnLoad = new Vue({
                                     if (response.status === 200)
                                         return response.json()
                                         // .then(notes => app.notes = notes);
-                                            .then(notesVue.getNotes);
+                                            .then(notesVue.loadNotes);
                                     else
                                         alert(response.status);
                                 })
@@ -51,13 +51,13 @@ var userOnLoad = new Vue({
 });
 
 
-var notesVue = new Vue({
+const notesVue = new Vue({
     el: '#app2',
     data: {
         notes: []
     },
     methods: {
-        getNotes: function () {
+        loadNotes: function () {
 
             const app = this;
 
@@ -82,14 +82,50 @@ var notesVue = new Vue({
                 headers: headers
             })
                 .then(response => {
-                    if(response.status === 200) {
+                    if (response.status === 200) {
                         const index = app.notes.indexOf(note);
                         app.notes.splice(index, 1);
                     } else
                         alert(response.status);
                 });
+        },
+        saveNote: function (noteText) {
+
+            const app = this;
+
+            const bodyData = JSON.stringify({text: noteText})
+
+            fetch(REST_URL + '/users/' + username + '/notes', {
+                method: 'POST',
+                headers: headers,
+                body: bodyData
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        app.loadNotes(); //would be great to optimize this part of code, maybe
+                    } else alert(response.status);
+                });
         }
     },
 });
 
-// var
+// const saveNoteVue = new Vue({
+//     el: '#app3',
+//     methods: {
+//         saveNote: function (noteText) {
+//
+//
+//             fetch(REST_URL + '/users/' + username + '/notes', {
+//                 method: 'POST',
+//                 headers: headers,
+//                 body: {
+//                     'text': 'sa'
+//                 }
+//             })
+//                 .then(response => {
+//                     if (response.status !== 200)
+//                         alert(response.status);
+//                 });
+//         }
+//     }
+// });
