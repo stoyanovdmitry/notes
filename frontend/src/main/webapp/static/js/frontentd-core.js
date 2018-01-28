@@ -68,7 +68,7 @@ var notesVue = new Vue({
                 .then(function (response) {
                     if (response.status === 200)
                         return response.json()
-                            .then(notes => app.notes = notes);
+                            .then(notes => app.notes = notes.reverse());
                     else
                         alert(response.status);
                 });

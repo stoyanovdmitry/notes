@@ -38,7 +38,7 @@
         <div v-for="note in notes" class="col-sm-4">
             <div class="note mb-5 p-4">
                 <span>{{ note.text }}</span>
-                <br><button type="button" class="btn btn-outline-danger float-right" v-on:click="deleteNote(note)">D</button>
+                <br><button type="button" class="btn btn-outline-danger float-right border-0 rounded-circle" v-on:click="deleteNote(note)">D</button>
             </div>
         </div>
     </div>
