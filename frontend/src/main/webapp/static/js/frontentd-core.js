@@ -20,6 +20,25 @@ $(document).ready(function () {
     });
 });
 
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function fillCookie() {
+    let twoWeeks = new Date(new Date().getTime() + 1209600 * 1000);
+    document.cookie = 'username=' + username + '; path=/; expires=' + twoWeeks.toUTCString();
+    document.cookie = 'password=' + password + '; path=/; expires=' + twoWeeks.toUTCString();
+}
+
+function deleteCookie() {
+    let date = new Date(new Date().getTime() - 1);
+    document.cookie = 'username=;' + 'expires=' + date.toUTCString();
+    document.cookie = 'password=;' + 'expires=' + date.toUTCString();
+}
+
 const authController = new Vue({
     el: "#auth",
     data: {
@@ -63,6 +82,8 @@ const userController = new Vue({
                                 notesVue.loadNotes();
                                 app.showMain();
                                 authController.clearData();
+
+                                fillCookie();
                             });
                     else {
                         alert(response.status);
@@ -77,6 +98,9 @@ const userController = new Vue({
             username = '';
             password = '';
             this.user = null;
+
+            deleteCookie('username');
+            deleteCookie('password');
         },
         showAuth() {
             $('.notes-auth').show();
@@ -93,8 +117,16 @@ const userController = new Vue({
         }
     },
     mounted: function () {
-        if (username !== '')
+
+        let name = getCookie('username');
+        let pass = getCookie('password');
+
+        if (name !== undefined && pass !== undefined) {
+
+            username = name;
+            password = pass;
             this.login();
+        }
     },
 });
 
