@@ -57,7 +57,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <form action="">
-                        <textarea v-model="noteText" placeholder="Note something..."
+                        <textarea id="addNoteModalTextarea" v-model="noteText" placeholder="Note something..."
                                   class="form-control note-textarea"></textarea>
                         <button v-on:click="saveNote(noteText)" type="button"
                                 class="btn btn-primary float-right position-relative" style="top: 2em">Save
@@ -72,7 +72,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <form v-if="editableNote" action="">
-                        <textarea v-if="editableNote" v-model="editableNote.text"
+                        <textarea id="editNoteModalTextarea" v-if="editableNote" v-model="editableNote.text"
                                   class="form-control note-textarea"></textarea>
                         <button v-on:click="updateNote()" type="button"
                                 class="btn btn-primary float-right position-relative" style="top: 2em">Save
