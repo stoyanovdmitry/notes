@@ -1,13 +1,12 @@
 const REST_URL = 'http://localhost:8080/rest/rest';
 
-var username = 'user';
-var password = 'pass';
+var username = '';
+var password = '';
 
 
 const headers = new Headers();
 headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
-headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
 
 
 $(document).ready(function () {
@@ -21,31 +20,81 @@ $(document).ready(function () {
     });
 });
 
-const userOnLoad = new Vue({
+const authController = new Vue({
+    el: "#auth",
+    data: {
+        name: '',
+        pass: ''
+    },
+    methods: {
+        tryLogin: function () {
+            username = this.name;
+            password = this.pass;
+
+            userController.login();
+        },
+        clearData: function () {
+            this.name = '';
+            this.pass = '';
+        }
+    }
+});
+
+const userController = new Vue({
     el: '#app',
     data: {
         user: null
     },
-    mounted: function () {
+    methods: {
+        login: function () {
+            const app = this;
 
-        const app = this;
+            headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
 
-        fetch(REST_URL + '/users/' + username, {
-            method: 'GET',
-            headers: headers
-        })
-            .then(function (response) {
-                if (response.status === 200)
-                    return response.json()
-                        .then(function (user) {
-                            app.user = user;
-                            notesVue.loadNotes();
-                        });
-                else alert(response.status)
+            fetch(REST_URL + '/users/' + username, {
+                method: 'GET',
+                headers: headers
             })
-            .catch(function (reason) {
-                console.log('Load user is failed:\n' + reason);
-            });
+                .then(function (response) {
+                    if (response.status === 200)
+                        return response.json()
+                            .then(function (user) {
+                                app.user = user;
+                                notesVue.loadNotes();
+                                app.showMain();
+                                authController.clearData();
+                            });
+                    else {
+                        alert(response.status);
+                        app.logout();
+                    }
+                })
+                .catch(function (reason) {
+                    console.log('Load user is failed:\n' + reason);
+                });
+        },
+        logout: function () {
+            username = '';
+            password = '';
+            this.user = null;
+        },
+        showAuth() {
+            $('.notes-auth').show();
+            $('.notes-main').hide();
+        },
+        showMain() {
+            $('.notes-auth').hide();
+            $('.notes-main').show();
+        }
+    },
+    watch: {
+        user: function (current, old) {
+            if (current === null) this.showAuth();
+        }
+    },
+    mounted: function () {
+        if (username !== '')
+            this.login();
     },
 });
 
