@@ -24,22 +24,39 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-5 ml-auto mr-auto border auth-block">
-                <form class="p-3" v-on:submit.prevent="tryLogin" method="post" action="login">
+                <form class="p-3" v-on:submit.prevent="tryLogin">
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input v-model="name" type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="form-group" v-show="signUp" style="display: none;">
+                        <label for="email">Email:</label>
+                        <input v-model="email" type="email" class="form-control" id="email" required
+                               :disabled="!signUp">
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password:</label>
                         <input v-model="pass" type="password" class="form-control" id="pwd" required>
                     </div>
                     <div class="form-check">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span v-show="!signUp">Login</span>
+                            <span v-show="signUp" style="display: none;">Sign Up</span>
+                        </button>
                         <label class="form-check-label ml-3">
                             <input v-model="rememberMe" class="form-check-input" type="checkbox"> Remember me
                         </label>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="row mt-3 d-flex justify-content-center">
+            <div class="col-sm-5">
+                <label class="form-check-label d-flex justify-content-center">
+                    <input v-model="signUp" class="form-check-input" type="checkbox" style="visibility: hidden;">
+                    <span v-show="!signUp" class="btn-link">Want to sign up?</span>
+                    <span v-show="signUp" class="btn-link" style="display: none;">Want to Login?</span>
+                </label>
             </div>
         </div>
     </div>

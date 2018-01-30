@@ -45,7 +45,9 @@ const authController = new Vue({
     data: {
         name: '',
         pass: '',
-        rememberMe: false
+        email: '',
+        rememberMe: false,
+        signUp: false
     },
     methods: {
         tryLogin: function () {
@@ -53,12 +55,49 @@ const authController = new Vue({
             password = this.pass;
             rememberMe = this.rememberMe;
 
-            userController.login();
+            if (!this.signUp)
+                userController.login();
+            else {
+                this.registration();
+            } //менять значение email!!!
+
         },
         clearData: function () {
             this.name = '';
             this.pass = '';
+            this.email = '';
             this.rememberMe = false;
+            this.signUp = false;
+        },
+        registration: function () {
+            const app = this;
+
+            var user = {
+                username: app.name,
+                password: app.pass,
+                email: app.email
+            };
+
+            const bodyData = JSON.stringify(user);
+
+            headers.delete('Authorization');
+
+            fetch(REST_URL + '/users/', {
+                method: 'POST',
+                headers: headers,
+                body: bodyData
+            })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        userController.login();
+                    }
+                    else {
+                        alert(response.status);
+                    }
+                })
+                .catch(function (reason) {
+                    console.log('Sign up is failed:\n' + reason);
+                });
         }
     }
 });
@@ -94,6 +133,7 @@ const userController = new Vue({
                     }
                     else {
                         alert(response.status);
+                        authController.clearData();
                         app.logout();
                     }
                 })
