@@ -2,6 +2,7 @@ const REST_URL = 'http://localhost:8080/rest/rest';
 
 var username = '';
 var password = '';
+var rememberMe = false;
 
 
 const headers = new Headers();
@@ -43,18 +44,21 @@ const authController = new Vue({
     el: "#auth",
     data: {
         name: '',
-        pass: ''
+        pass: '',
+        rememberMe: false
     },
     methods: {
         tryLogin: function () {
             username = this.name;
             password = this.pass;
+            rememberMe = this.rememberMe;
 
             userController.login();
         },
         clearData: function () {
             this.name = '';
             this.pass = '';
+            this.rememberMe = false;
         }
     }
 });
@@ -75,7 +79,7 @@ const userController = new Vue({
                 headers: headers
             })
                 .then(function (response) {
-                    if (response.status === 200)
+                    if (response.status === 200) {
                         return response.json()
                             .then(function (user) {
                                 app.user = user;
@@ -83,8 +87,11 @@ const userController = new Vue({
                                 app.showMain();
                                 authController.clearData();
 
-                                fillCookie();
+                                if (rememberMe) {
+                                    fillCookie();
+                                }
                             });
+                    }
                     else {
                         alert(response.status);
                         app.logout();
@@ -97,7 +104,9 @@ const userController = new Vue({
         logout: function () {
             username = '';
             password = '';
+
             this.user = null;
+            rememberMe = false;
 
             deleteCookie('username');
             deleteCookie('password');
